@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Kite Mentorship</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #060e1f;
+    --blue: #1740c8;
+    --lightblue: #3b82f6;
+    --skyblue: #60a5fa;
+    --accent: #00d4ff;
+    --gold: #f59e0b;
+    --white: #ffffff;
+    --border: rgba(255,255,255,0.10);
+    --glass: rgba(255,255,255,0.04);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse at 15% 10%, rgba(26,79,214,0.3) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 90%, rgba(0,212,255,0.12) 0%, transparent 55%);
+    pointer-events:none; z-index:0;
+  }
+  .container { max-width:1080px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+  /* HEADER */
+  header { text-align:center; padding:56px 20px 24px; }
+  .logo { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:10px; }
+  .kite { font-size:50px; animation:drift 4s ease-in-out infinite; display:inline-block; }
+  @keyframes drift { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-12px) rotate(5deg)} }
+  .logo h1 { font-family:'Syne',sans-serif; font-size:52px; font-weight:800; letter-spacing:3px; line-height:1; }
+  .logo h1 .hl { color:var(--accent); }
+  .subtitle-bar { font-size:12px; letter-spacing:5px; text-transform:uppercase; color:var(--skyblue); margin-bottom:8px; font-weight:600; }
+  .slogan { color:rgba(255,255,255,0.38); font-size:14px; letter-spacing:1px; }
+
+  /* STEPS */
+  .steps { display:flex; align-items:center; justify-content:center; gap:0; padding:28px 0 36px; position:relative; z-index:1; }
+  .step { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .step-dot {
+    width:36px; height:36px; border-radius:50%;
+    border:2px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.05);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:700; color:rgba(255,255,255,0.4);
+    transition:all 0.4s;
+  }
+  .step-dot.active { border-color:var(--accent); background:rgba(0,212,255,0.15); color:var(--accent); box-shadow:0 0 20px rgba(0,212,255,0.3); }
+  .step-dot.done { border-color:#4ade80; background:rgba(74,222,128,0.15); color:#4ade80; }
+  .step-label { font-size:11px; color:rgba(255,255,255,0.35); font-weight:500; letter-spacing:0.5px; }
+  .step-label.active { color:var(--accent); }
+  .step-line { width:60px; height:1px; background:rgba(255,255,255,0.1); margin:0 8px; margin-bottom:18px; transition:background 0.4s; }
+  .step-line.done { background:rgba(74,222,128,0.5); }
+
+  /* PLANS */
+  .plans-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; padding-bottom:50px; }
+  .plan-card {
+    background:var(--glass); border:1px solid var(--border);
+    border-radius:22px; padding:30px 26px; position:relative;
+    transition:transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .plan-card:hover { transform:translateY(-8px); border-color:rgba(59,130,246,0.5); box-shadow:0 24px 70px rgba(26,79,214,0.25); }
+  .badge-popular {
+    position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(135deg,#f59e0b,#ef4444);
+    color:#fff; font-size:10px; font-weight:800; padding:5px 18px;
+    border-radius:30px; letter-spacing:1.5px; white-space:nowrap;
+  }
+  .plan-icon-wrap { text-align:center; font-size:38px; margin-bottom:10px; }
+  .plan-name { font-family:'Syne',sans-serif; font-size:21px; font-weight:700; color:var(--accent); text-align:center; margin-bottom:3px; }
+  .plan-tag { text-align:center; font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:20px; letter-spacing:0.3px; }
+
+  .dur-list { display:flex; flex-direction:column; gap:10px; margin-bottom:18px; }
+  .dur-row {
+    display:flex; justify-content:space-between; align-items:center;
+    background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.08);
+    border-radius:12px; padding:11px 16px; cursor:pointer; transition:all 0.22s;
+  }
+  .dur-row:hover { background:rgba(26,79,214,0.25); border-color:rgba(59,130,246,0.5); }
+  .dur-row.sel { background:rgba(26,79,214,0.4); border-color:var(--accent); }
+  .dur-label { font-weight:600; font-size:14px; }
+  .dur-price { background:var(--blue); color:#fff; font-weight:700; font-size:14px; padding:4px 14px; border-radius:8px; }
+  .plan-note { font-size:12px; color:rgba(255,255,255,0.45); text-align:center; }
+
+  /* PAYMENT */
+  .page { display:none; }
+  .page.active { display:block; animation:up 0.45s ease; }
+  @keyframes up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  .pay-wrap { max-width:580px; margin:0 auto; }
+  .back-btn {
+    background:none; border:1px solid rgba(255,255,255,0.18); color:rgba(255,255,255,0.6);
+    padding:8px 18px; border-radius:9px; cursor:pointer; font-family:'DM Sans',sans-serif;
+    font-size:13px; margin-bottom:26px; transition:all 0.2s;
+  }
+  .back-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  .section-head { font-family:'Syne',sans-serif; font-size:24px; font-weight:700; color:var(--accent); margin-bottom:4px; }
+  .section-sub { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:26px; }
+
+  .order-bar {
+    background:rgba(26,79,214,0.14); border:1px solid rgba(26,79,214,0.35);
+    border-radius:16px; padding:16px 22px; margin-bottom:28px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .ob-left .ob-label { font-size:11px; color:rgba(255,255,255,0.45); margin-bottom:2px; }
+  .ob-left .ob-val { font-weight:700; font-size:15px; }
+  .ob-price { font-family:'Syne',sans-serif; font-size:34px; font-weight:800; color:var(--accent); }
+
+  /* Region toggle */
+  .region-toggle { display:flex; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:14px; padding:5px; margin-bottom:26px; gap:5px; }
+  .reg-btn {
+    flex:1; padding:11px 8px; border:none; border-radius:10px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+    background:transparent; color:rgba(255,255,255,0.45); transition:all 0.25s;
+  }
+  .reg-btn.active { background:var(--blue); color:#fff; box-shadow:0 4px 18px rgba(26,79,214,0.5); }
+
+  /* Method grid */
+  .method-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:22px; }
+  .m-btn {
+    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.09);
+    border-radius:14px; padding:14px 10px; cursor:pointer; text-align:center;
+    transition:all 0.22s; color:white; font-family:'DM Sans',sans-serif;
+  }
+  .m-btn .m-icon { font-size:26px; display:block; margin-bottom:5px; }
+  .m-btn .m-name { font-size:12px; font-weight:700; }
+  .m-btn .m-sub { font-size:10px; color:rgba(255,255,255,0.35); margin-top:2px; }
+  .m-btn:hover { border-color:var(--lightblue); background:rgba(26,79,214,0.2); transform:translateY(-2px); }
+  .m-btn.active { border-color:var(--accent); background:rgba(0,212,255,0.1); box-shadow:0 0 20px rgba(0,212,255,0.15); }
+
+  .pay-info-box { display:none; }
+  .pay-info-box.show { display:block; animation:up 0.35s ease; }
+
+  /* bKash */
+  .bkash-box {
+    background:rgba(220,38,127,0.08); border:1px solid rgba(220,38,127,0.35);
+    border-radius:14px; padding:16px 20px; margin-bottom:20px;
+  }
+  .bkash-box .bk-num { font-size:22px; font-weight:700; color:#f472b6; letter-spacing:2px; margin-top:4px; }
+  .bkash-box .bk-label { font-size:11px; color:rgba(255,255,255,0.45); }
+
+  /* Intl info */
+  .intl-info-box {
+    background:rgba(245,158,11,0.07); border:1px solid rgba(245,158,11,0.3);
+    border-radius:14px; padding:16px 20px; margin-bottom:20px;
+    display:flex; align-items:flex-start; gap:14px;
+  }
+  .intl-info-box .ii-icon { font-size:30px; flex-shrink:0; }
+  .intl-info-box .ii-text { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.8; }
+  .intl-info-box .ii-text strong { color:var(--gold); }
+
+  .instructions {
+    background:rgba(255,255,255,0.04); border-radius:12px;
+    padding:15px 18px; margin-bottom:20px;
+    font-size:13px; color:rgba(255,255,255,0.55); line-height:1.8;
+  }
+  .instructions ol { padding-left:18px; }
+  .instructions li { margin-bottom:3px; }
+  .instructions strong { color:rgba(255,255,255,0.85); }
+
+  .field { margin-bottom:18px; }
+  .field label { display:block; font-size:12px; font-weight:600; color:rgba(255,255,255,0.6); margin-bottom:7px; letter-spacing:0.4px; text-transform:uppercase; }
+  .field input, .field select {
+    width:100%; background:rgba(255,255,255,0.06);
+    border:1.5px solid rgba(255,255,255,0.12); border-radius:12px;
+    padding:13px 16px; color:white; font-family:'DM Sans',sans-serif;
+    font-size:15px; outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance:none; appearance:none;
+  }
+  .field input:focus, .field select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,212,255,0.1); }
+  .field input::placeholder { color:rgba(255,255,255,0.25); }
+  .field select option { background:#0d1e3a; color:#fff; }
+
+  .submit-btn {
+    width:100%; padding:16px; border:none; border-radius:14px;
+    background:linear-gradient(135deg, #00d4ff 0%, #1740c8 100%);
+    color:white; font-family:'Syne',sans-serif;
+    font-size:16px; font-weight:700; cursor:pointer;
+    transition:all 0.3s; letter-spacing:0.5px; margin-top:6px;
+  }
+  .submit-btn:hover { transform:scale(1.02); box-shadow:0 12px 40px rgba(0,212,255,0.35); }
+
+  /* SUCCESS */
+  #successPage { text-align:center; padding:60px 20px; }
+  .s-icon { font-size:80px; animation:pop 0.6s cubic-bezier(0.34,1.56,0.64,1); display:inline-block; margin-bottom:18px; }
+  @keyframes pop { 0%{transform:scale(0) rotate(-15deg)} 100%{transform:scale(1) rotate(0)} }
+  .s-title { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; color:#4ade80; margin-bottom:10px; }
+  .s-msg { color:rgba(255,255,255,0.5); font-size:15px; line-height:1.8; max-width:420px; margin:0 auto 30px; }
+  .s-card {
+    background:var(--glass); border:1px solid rgba(74,222,128,0.25);
+    border-radius:18px; padding:22px 28px; max-width:400px;
+    margin:0 auto 32px; text-align:left;
+  }
+  .s-row { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px; }
+  .s-row:last-child { border:none; }
+  .s-row .k { color:rgba(255,255,255,0.45); }
+  .s-row .v { font-weight:600; word-break:break-all; text-align:right; max-width:200px; }
+  .home-btn {
+    background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.18);
+    color:rgba(255,255,255,0.8); padding:13px 32px; border-radius:12px;
+    cursor:pointer; font-family:'DM Sans',sans-serif; font-size:15px; transition:all 0.2s;
+  }
+  .home-btn:hover { background:rgba(255,255,255,0.14); color:#fff; }
+
+  /* Features */
+  .features { display:flex; justify-content:center; gap:48px; flex-wrap:wrap; padding:28px 0 50px; border-top:1px solid var(--border); }
+  .feat { text-align:center; }
+  .feat-icon { font-size:26px; margin-bottom:6px; }
+  .feat-name { font-size:11px; font-weight:700; color:var(--skyblue); letter-spacing:1px; text-transform:uppercase; }
+  .feat-desc { font-size:11px; color:rgba(255,255,255,0.35); margin-top:2px; }
+
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  /* Card payment 2-step flow */
+  .card-flow { display:none; }
+  .card-flow.show { display:block; animation:up 0.35s ease; }
+  .card-step-tabs { display:flex; gap:0; margin-bottom:22px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); }
+  .cstab { flex:1; padding:11px 8px; text-align:center; font-size:12px; font-weight:700; background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.35); letter-spacing:0.3px; transition:all 0.3s; border:none; cursor:default; }
+  .cstab.active { background:rgba(26,79,214,0.5); color:#fff; }
+  .cstab.done-tab { background:rgba(74,222,128,0.12); color:#4ade80; }
+  .card-panel { display:none; }
+  .card-panel.show { display:block; animation:up 0.3s ease; }
+  .card-details-box { background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.35); border-radius:14px; padding:20px 22px; margin-bottom:20px; }
+  .card-details-box .cd-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px; }
+  .card-details-box .cd-row:last-child { border:none; }
+  .card-details-box .cd-k { color:rgba(255,255,255,0.45); font-size:12px; }
+  .card-details-box .cd-v { font-weight:700; color:#a5b4fc; }
+  .card-details-box .cd-v.big { font-size:20px; color:var(--accent); font-family:'Syne',sans-serif; }
+  .secure-badge { display:flex; align-items:center; gap:8px; background:rgba(74,222,128,0.07); border:1px solid rgba(74,222,128,0.2); border-radius:10px; padding:10px 14px; margin-bottom:18px; font-size:12px; color:rgba(74,222,128,0.8); }
+  .next-btn { width:100%; padding:14px; border:none; border-radius:12px; background:linear-gradient(135deg,#6366f1,#1740c8); color:white; font-family:'Syne',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:all 0.3s; margin-top:4px; }
+  .next-btn:hover { transform:scale(1.02); box-shadow:0 10px 30px rgba(99,102,241,0.4); }
+  .card-trx-hint { background:rgba(99,102,241,0.07); border:1px solid rgba(99,102,241,0.3); border-radius:12px; padding:14px 18px; margin-bottom:18px; font-size:13px; color:rgba(255,255,255,0.55); line-height:1.8; }
+  .card-trx-hint strong { color:#a5b4fc; }
+
+  @media(max-width:620px) {
+    .logo h1 { font-size:36px; }
+    .plans-grid { grid-template-columns:1fr; }
+    .step-line { width:32px; }
+    .method-grid { grid-template-columns:repeat(2,1fr); }
+    .features { gap:28px; }
+    .field-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<div id="landingPage">
+  <header>
+    <div class="logo">
+      <span class="kite">🪁</span>
+      <h1>BLUE <span class="hl">KITE</span></h1>
+    </div>
+    <div class="subtitle-bar">Mentorship Packages</div>
+    <div class="slogan">✦ &nbsp;Learn. Grow. Succeed.&nbsp; ✦</div>
+  </header>
+
+  <div class="container">
+    <div class="steps">
+      <div class="step"><div class="step-dot active">1</div><div class="step-label active">Choose Plan</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-dot">2</div><div class="step-label">Payment</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-dot">3</div><div class="step-label">Done</div></div>
+    </div>
+
+    <div class="plans-grid">
+      <!-- BASIC -->
+      <div class="plan-card">
+        <div class="plan-icon-wrap">⭐</div>
+        <div class="plan-name">BASIC PLAN</div>
+        <div class="plan-tag">Perfect for Beginners</div>
+        <div class="dur-list">
+          <div class="dur-row" onclick="pick('Basic','1 Month',2,this)"><span class="dur-label">1 Month</span><span class="dur-price">$2</span></div>
+          <div class="dur-row" onclick="pick('Basic','3 Months',5,this)"><span class="dur-label">3 Months</span><span class="dur-price">$5</span></div>
+          <div class="dur-row" onclick="pick('Basic','6 Months',15,this)"><span class="dur-label">6 Months</span><span class="dur-price">$15</span></div>
+        </div>
+        <div class="plan-note">🛡️ Build your foundation with basic guidance</div>
+      </div>
+
+      <!-- STANDARD -->
+      <div class="plan-card">
+        <div class="badge-popular">🔥 MOST POPULAR</div>
+        <div class="plan-icon-wrap">📈</div>
+        <div class="plan-name">STANDARD PLAN</div>
+        <div class="plan-tag">For Serious Growth</div>
+        <div class="dur-list">
+          <div class="dur-row" onclick="pick('Standard','3 Months',10,this)"><span class="dur-label">3 Months</span><span class="dur-price">$10</span></div>
+          <div class="dur-row" onclick="pick('Standard','6 Months',25,this)"><span class="dur-label">6 Months</span><span class="dur-price">$25</span></div>
+          <div class="dur-row" onclick="pick('Standard','12 Months',60,this)"><span class="dur-label">12 Months</span><span class="dur-price">$60</span></div>
+        </div>
+        <div class="plan-note">🎯 Advanced strategies and consistent support</div>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="plan-card">
+        <div class="plan-icon-wrap">👑</div>
+        <div class="plan-name">PREMIUM PLAN</div>
+        <div class="plan-tag">For Maximum Results</div>
+        <div class="dur-list">
+          <div class="dur-row" onclick="pick('Premium','3 Months',20,this)"><span class="dur-label">3 Months</span><span class="dur-price">$20</span></div>
+          <div class="dur-row" onclick="pick('Premium','6 Months',40,this)"><span class="dur-label">6 Months</span><span class="dur-price">$40</span></div>
+          <div class="dur-row" onclick="pick('Premium','12 Months',90,this)"><span class="dur-label">12 Months</span><span class="dur-price">$90</span></div>
+        </div>
+        <div class="plan-note">💎 Personalized guidance and priority support</div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feat"><div class="feat-icon">👤</div><div class="feat-name">Niche Guidance</div><div class="feat-desc">Find the right niche & audience</div></div>
+      <div class="feat"><div class="feat-icon">📊</div><div class="feat-name">Growth Strategy</div><div class="feat-desc">Grow accounts organically</div></div>
+      <div class="feat"><div class="feat-icon">🎧</div><div class="feat-name">Basic Support</div><div class="feat-desc">Get your questions answered</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAYMENT ══ -->
+<div id="paymentPage" class="page">
+  <div class="container">
+    <div class="steps" style="padding-top:40px;">
+      <div class="step"><div class="step-dot done">✓</div><div class="step-label">Choose Plan</div></div>
+      <div class="step-line done"></div>
+      <div class="step"><div class="step-dot active">2</div><div class="step-label active">Payment</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-dot">3</div><div class="step-label">Done</div></div>
+    </div>
+
+    <div class="pay-wrap">
+      <button class="back-btn" onclick="goBack()">← Back to Plans</button>
+      <div class="section-head">Complete Your Payment</div>
+      <div class="section-sub">Select your region and preferred payment method</div>
+
+      <div class="order-bar">
+        <div class="ob-left">
+          <div class="ob-label">Selected Plan</div>
+          <div class="ob-val" id="sumPlan">—</div>
+          <div class="ob-label" style="margin-top:6px">Duration</div>
+          <div class="ob-val" id="sumDur">—</div>
+        </div>
+        <div class="ob-price" id="sumPrice">$0</div>
+      </div>
+
+      <!-- Region -->
+      <div style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">Your Region</div>
+      <div class="region-toggle">
+        <button class="reg-btn" id="bdBtn" onclick="setRegion('bd')">🇧🇩 Bangladesh</button>
+        <button class="reg-btn active" id="intlBtn" onclick="setRegion('intl')">🌍 International</button>
+      </div>
+
+      <!-- ── BD bKash only ── -->
+      <div id="bdSection" style="display:none;">
+        <div class="bkash-box">
+          <div class="bk-label">Send payment via bKash (Personal) to:</div>
+          <div class="bk-num">01724462666</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px;">bKash Personal Account</div>
+        </div>
+        <div class="instructions">
+          <ol>
+            <li>Open bKash app or dial <strong>*247#</strong></li>
+            <li>Select <strong>"Send Money"</strong></li>
+            <li>Enter the number above and send <strong id="bkAmt">$0</strong></li>
+            <li>Note down your <strong>Transaction ID (TrxID)</strong></li>
+            <li>Fill the form below and submit</li>
+          </ol>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Full Name</label><input type="text" id="bdName" placeholder="Your full name"></div>
+          <div class="field"><label>Your bKash Number</label><input type="tel" id="bdPhone" placeholder="01XXXXXXXXX"></div>
+        </div>
+        <div class="field"><label>bKash Transaction ID (TrxID)</label><input type="text" id="bdTrx" placeholder="e.g. 8ABX123456" style="font-size:16px;letter-spacing:1px;"></div>
+        <button class="submit-btn" onclick="submitPay('bd')">✅ Confirm Payment</button>
+      </div>
+
+      <!-- ── International ── -->
+      <div id="intlSection">
+        <div style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">Choose Payment Method</div>
+        <div class="method-grid">
+          <button class="m-btn" onclick="setMethod('paypal',this)">
+            <span class="m-icon">🅿️</span><span class="m-name">PayPal</span><span class="m-sub">Instant · Secure</span>
+          </button>
+          <button class="m-btn" onclick="setMethod('wise',this)">
+            <span class="m-icon">🟢</span><span class="m-name">Wise</span><span class="m-sub">Low fees</span>
+          </button>
+          <button class="m-btn" onclick="setMethod('crypto',this)">
+            <span class="m-icon">₿</span><span class="m-name">Crypto</span><span class="m-sub">USDT / BTC</span>
+          </button>
+          <button class="m-btn" onclick="setMethod('bank',this)">
+            <span class="m-icon">🏦</span><span class="m-name">Bank Wire</span><span class="m-sub">Direct transfer</span>
+          </button>
+          <button class="m-btn" onclick="setMethod('card',this)">
+            <span class="m-icon">💳</span><span class="m-name">Card</span><span class="m-sub">Visa / Mastercard</span>
+          </button>
+          <button class="m-btn" onclick="setMethod('payoneer',this)">
+            <span class="m-icon">🟡</span><span class="m-name">Payoneer</span><span class="m-sub">Global</span>
+          </button>
+        </div>
+
+        <!-- Method info boxes -->
+        <div class="pay-info-box" id="info-paypal">
+          <div class="intl-info-box">
+            <span class="ii-icon">🅿️</span>
+            <div class="ii-text">Send to PayPal: <strong>mentor@bluekite.com</strong><br>Amount: <strong id="ppAmt">$0</strong><br>Add a note with your plan name and email address.</div>
+          </div>
+        </div>
+        <div class="pay-info-box" id="info-wise">
+          <div class="intl-info-box">
+            <span class="ii-icon">🟢</span>
+            <div class="ii-text">Send via Wise to: <strong>mentor@bluekite.com</strong><br>Amount: <strong id="wiseAmt">$0</strong><br>Include your plan name in the reference field.</div>
+          </div>
+        </div>
+        <div class="pay-info-box" id="info-crypto">
+          <div class="intl-info-box">
+            <span class="ii-icon">₿</span>
+            <div class="ii-text">
+              USDT (TRC20): <strong>TXXXXXXXXXXXXXXXXXXXXXXxxxxxxxx</strong><br>
+              BTC: <strong>bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</strong><br>
+              Amount: <strong id="cryptoAmt">$0</strong> equivalent · Save the TX hash.
+            </div>
+          </div>
+        </div>
+        <div class="pay-info-box" id="info-bank">
+          <div class="intl-info-box">
+            <span class="ii-icon">🏦</span>
+            <div class="ii-text">
+              Bank: <strong>Your Bank Name</strong><br>
+              Account No: <strong>XXXXXXXXXXXXXX</strong><br>
+              SWIFT/BIC: <strong>XXXXXXXX</strong> · Amount: <strong id="bankAmt">$0</strong>
+            </div>
+          </div>
+        </div>
+        <div class="pay-info-box card-flow" id="info-card">
+          <!-- Step tabs -->
+          <div class="card-step-tabs">
+            <div class="cstab active" id="cTab1">① Payment Details</div>
+            <div class="cstab" id="cTab2">② Enter Card Info</div>
+            <div class="cstab" id="cTab3">③ Confirm TrxID</div>
+          </div>
+
+          <!-- Panel 1: Show what to pay -->
+          <div class="card-panel show" id="cPanel1">
+            <div class="card-details-box">
+              <div class="cd-row"><span class="cd-k">Plan</span><span class="cd-v" id="cardPlan">—</span></div>
+              <div class="cd-row"><span class="cd-k">Duration</span><span class="cd-v" id="cardDur">—</span></div>
+              <div class="cd-row"><span class="cd-k">Amount to Pay</span><span class="cd-v big" id="cardAmt">$0</span></div>
+              <div class="cd-row"><span class="cd-k">Currency</span><span class="cd-v">USD</span></div>
+            </div>
+            <div class="secure-badge">🔒 &nbsp;Secure card payment · Visa · Mastercard · Amex supported</div>
+            <button class="next-btn" onclick="cardNextStep(2)">Proceed to Card Payment →</button>
+          </div>
+
+          <!-- Panel 2: Card details -->
+          <div class="card-panel" id="cPanel2">
+            <div class="card-trx-hint">Enter your card details below. After the payment is processed, your bank or payment processor will provide a <strong>Transaction ID / Reference Number</strong> — you'll need this in the next step.</div>
+            <div class="field-row">
+              <div class="field"><label>Card Number</label><input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)"></div>
+              <div class="field"><label>Cardholder Name</label><input type="text" id="cardHolder" placeholder="Name on card"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Expiry Date</label><input type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7" oninput="fmtExpiry(this)"></div>
+              <div class="field"><label>CVV</label><input type="text" id="cardCVV" placeholder="123" maxlength="4" style="letter-spacing:4px;"></div>
+            </div>
+            <div class="secure-badge">🔒 &nbsp;Your card details are encrypted and never stored</div>
+            <button class="next-btn" onclick="cardNextStep(3)">Pay $<span id="cardAmtBtn">0</span> →</button>
+          </div>
+
+          <!-- Panel 3: Enter TrxID after payment -->
+          <div class="card-panel" id="cPanel3">
+            <div class="card-trx-hint">✅ &nbsp;Your payment has been processed. Please enter the <strong>Transaction ID / Reference Number</strong> you received from your bank or card statement to confirm your order.</div>
+            <div class="field"><label>Your Name</label><input type="text" id="cardName" placeholder="Your full name"></div>
+            <div class="field"><label>Email Address</label><input type="email" id="cardEmail" placeholder="you@email.com"></div>
+            <div class="field"><label>Transaction ID / Reference Number</label><input type="text" id="cardTrx" placeholder="e.g. TXN7823456 or REF-ABC123" style="font-size:15px;letter-spacing:0.5px;"></div>
+            <button class="submit-btn" onclick="submitPay('intl')" style="margin-top:8px;">✅ Confirm Card Payment</button>
+          </div>
+        </div>
+        <div class="pay-info-box" id="info-payoneer">
+          <div class="intl-info-box">
+            <span class="ii-icon">🟡</span>
+            <div class="ii-text">Request payment to: <strong>mentor@bluekite.com</strong> via Payoneer<br>Amount: <strong id="payoneerAmt">$0</strong> · Add your plan as the purpose.</div>
+          </div>
+        </div>
+
+        <!-- Intl form -->
+        <div class="field-row">
+          <div class="field"><label>Full Name</label><input type="text" id="intlName" placeholder="Your full name"></div>
+          <div class="field"><label>Email Address</label><input type="email" id="intlEmail" placeholder="you@email.com"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Country</label>
+            <select id="intlCountry">
+              <option value="">Select country...</option>
+              <option>United States</option><option>United Kingdom</option><option>Canada</option>
+              <option>Australia</option><option>Germany</option><option>France</option>
+              <option>India</option><option>Pakistan</option><option>UAE</option>
+              <option>Saudi Arabia</option><option>Malaysia</option><option>Singapore</option>
+              <option>Indonesia</option><option>Nigeria</option><option>Kenya</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>Payment Method Used</label><input type="text" id="intlMethodDisplay" placeholder="Auto-filled" readonly style="opacity:0.6;cursor:not-allowed;"></div>
+        </div>
+        <div class="field"><label>Transaction ID / Reference / TX Hash</label><input type="text" id="intlTrx" placeholder="Paste your TrxID, hash, or reference here" style="font-size:15px;"></div>
+        <button class="submit-btn" onclick="submitPay('intl')">✅ Confirm Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUCCESS ══ -->
+<div id="successPage" class="page">
+  <div class="container">
+    <div class="steps" style="padding-top:40px;">
+      <div class="step"><div class="step-dot done">✓</div><div class="step-label">Choose Plan</div></div>
+      <div class="step-line done"></div>
+      <div class="step"><div class="step-dot done">✓</div><div class="step-label">Payment</div></div>
+      <div class="step-line done"></div>
+      <div class="step"><div class="step-dot done">✓</div><div class="step-label">Done</div></div>
+    </div>
+    <div class="s-icon">🎉</div>
+    <div class="s-title">Payment Submitted!</div>
+    <div class="s-msg">Your payment request has been received successfully. We'll verify it and get in touch with you shortly to kick off your mentorship!</div>
+    <div class="s-card">
+      <div class="s-row"><span class="k">Plan</span><span class="v" id="scPlan">—</span></div>
+      <div class="s-row"><span class="k">Duration</span><span class="v" id="scDur">—</span></div>
+      <div class="s-row"><span class="k">Amount</span><span class="v" id="scPrice">—</span></div>
+      <div class="s-row"><span class="k">Method</span><span class="v" id="scMethod">—</span></div>
+      <div class="s-row"><span class="k">Transaction ID</span><span class="v" id="scTrx">—</span></div>
+      <div class="s-row"><span class="k">Name</span><span class="v" id="scName">—</span></div>
+    </div>
+    <button class="home-btn" onclick="restart()">🏠 Back to Home</button>
+  </div>
+</div>
+
+<script>
+  let plan='', dur='', price=0, region='intl', intlMethod='';
+
+  setRegion('intl');
+
+  function pick(p,d,pr,el){
+    document.querySelectorAll('.dur-row').forEach(r=>r.classList.remove('sel'));
+    el.classList.add('sel');
+    plan=p; dur=d; price=pr;
+    setTimeout(goPayment, 280);
+  }
+
+  function goPayment(){
+    document.getElementById('landingPage').style.display='none';
+    document.getElementById('paymentPage').classList.add('active');
+    document.getElementById('sumPlan').textContent=plan+' Plan';
+    document.getElementById('sumDur').textContent=dur;
+    document.getElementById('sumPrice').textContent='$'+price;
+    ['bkAmt','ppAmt','wiseAmt','cryptoAmt','bankAmt','cardAmt','payoneerAmt','cardAmtBtn'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.textContent='$'+price;
+    });
+    // update card panel labels
+    const cp=document.getElementById('cardPlan'); if(cp) cp.textContent=plan+' Plan';
+    const cd=document.getElementById('cardDur'); if(cd) cd.textContent=dur;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function goBack(){
+    document.getElementById('paymentPage').classList.remove('active');
+    document.getElementById('landingPage').style.display='block';
+    resetForm();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function setRegion(r){
+    region=r;
+    document.getElementById('bdBtn').classList.toggle('active', r==='bd');
+    document.getElementById('intlBtn').classList.toggle('active', r==='intl');
+    document.getElementById('bdSection').style.display = r==='bd'?'block':'none';
+    document.getElementById('intlSection').style.display = r==='intl'?'block':'none';
+  }
+
+  function setMethod(m, btn){
+    intlMethod=m;
+    document.querySelectorAll('.m-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.pay-info-box').forEach(b=>b.classList.remove('show'));
+    document.getElementById('info-'+m).classList.add('show');
+    const names={paypal:'PayPal',wise:'Wise',crypto:'Crypto (USDT/BTC)',bank:'Bank Wire',card:'Card (Visa/MC)',payoneer:'Payoneer'};
+    document.getElementById('intlMethodDisplay').value=names[m]||'';
+  }
+
+  function cardNextStep(step){
+    if(step===3){
+      const num=document.getElementById('cardNumber').value.replace(/\s/g,'');
+      const holder=document.getElementById('cardHolder').value.trim();
+      const expiry=document.getElementById('cardExpiry').value.trim();
+      const cvv=document.getElementById('cardCVV').value.trim();
+      if(num.length<15){ alert('Please enter a valid card number.'); return; }
+      if(!holder){ alert('Please enter the cardholder name.'); return; }
+      if(expiry.length<5){ alert('Please enter a valid expiry date.'); return; }
+      if(cvv.length<3){ alert('Please enter a valid CVV.'); return; }
+    }
+    // update tabs
+    for(let i=1;i<=3;i++){
+      const t=document.getElementById('cTab'+i);
+      const p=document.getElementById('cPanel'+i);
+      t.className='cstab'+(i<step?' done-tab':i===step?' active':'');
+      p.className='card-panel'+(i===step?' show':'');
+    }
+  }
+
+  function fmtCard(el){
+    let v=el.value.replace(/\D/g,'').substring(0,16);
+    el.value=v.replace(/(\d{4})(?=\d)/g,'$1 ');
+  }
+  function fmtExpiry(el){
+    let v=el.value.replace(/\D/g,'').substring(0,4);
+    if(v.length>=2) v=v.substring(0,2)+' / '+v.substring(2);
+    el.value=v;
+  }
+
+  function submitPay(type){
+    if(type==='bd'){
+      const name=document.getElementById('bdName').value.trim();
+      const phone=document.getElementById('bdPhone').value.trim();
+      const trx=document.getElementById('bdTrx').value.trim();
+      if(!name){ alert('Please enter your full name.'); return; }
+      if(!phone){ alert('Please enter your bKash number.'); return; }
+      if(!trx){ alert('Please enter your bKash Transaction ID (TrxID).'); return; }
+      showSuccess(name,'bKash',trx);
+    } else {
+      if(!intlMethod){ alert('Please select a payment method.'); return; }
+      if(intlMethod==='card'){
+        const name=document.getElementById('cardName').value.trim();
+        const email=document.getElementById('cardEmail').value.trim();
+        const trx=document.getElementById('cardTrx').value.trim();
+        if(!name){ alert('Please enter your full name.'); return; }
+        if(!email||!email.includes('@')){ alert('Please enter a valid email.'); return; }
+        if(!trx){ alert('Please enter your Transaction ID / Reference Number.'); return; }
+        showSuccess(name,'Card (Visa/MC)',trx);
+        return;
+      }
+      const name=document.getElementById('intlName').value.trim();
+      const email=document.getElementById('intlEmail').value.trim();
+      const country=document.getElementById('intlCountry').value;
+      const trx=document.getElementById('intlTrx').value.trim();
+      if(!name){ alert('Please enter your full name.'); return; }
+      if(!email || !email.includes('@')){ alert('Please enter a valid email address.'); return; }
+      if(!country){ alert('Please select your country.'); return; }
+      if(!trx){ alert('Please enter your Transaction ID or reference number.'); return; }
+      const names={paypal:'PayPal',wise:'Wise',crypto:'Crypto',bank:'Bank Wire',payoneer:'Payoneer'};
+      showSuccess(name, names[intlMethod], trx);
+    }
+  }
+
+  function showSuccess(name, method, trx){
+    document.getElementById('paymentPage').classList.remove('active');
+    document.getElementById('successPage').classList.add('active');
+    document.getElementById('scPlan').textContent=plan+' Plan';
+    document.getElementById('scDur').textContent=dur;
+    document.getElementById('scPrice').textContent='$'+price;
+    document.getElementById('scMethod').textContent=method;
+    document.getElementById('scTrx').textContent=trx;
+    document.getElementById('scName').textContent=name;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function resetForm(){
+    intlMethod='';
+    ['bdName','bdPhone','bdTrx','intlName','intlEmail','intlTrx','intlMethodDisplay'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value='';
+    });
+    const sc=document.getElementById('intlCountry'); if(sc) sc.value='';
+    document.querySelectorAll('.m-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.pay-info-box').forEach(b=>b.classList.remove('show'));
+    setRegion('intl');
+    // reset card panels
+    for(let i=1;i<=3;i++){
+      const t=document.getElementById('cTab'+i);
+      const p=document.getElementById('cPanel'+i);
+      if(t){ t.className='cstab'+(i===1?' active':''); }
+      if(p){ p.className='card-panel'+(i===1?' show':''); }
+    }
+    ['cardNumber','cardHolder','cardExpiry','cardCVV','cardName','cardEmail','cardTrx'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value='';
+    });
+  }
+
+  function restart(){
+    document.getElementById('successPage').classList.remove('active');
+    document.getElementById('landingPage').style.display='block';
+    resetForm();
+    document.querySelectorAll('.dur-row').forEach(r=>r.classList.remove('sel'));
+    plan=''; dur=''; price=0;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
